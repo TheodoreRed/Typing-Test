@@ -1,0 +1,93 @@
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  overflow: hidden;
+  height: 100vh;
+}
+header {
+  flex: 1;
+  background-color: ivory;
+  height: 350px;
+}
+main {
+  flex: 5;
+  background-color: gray;
+}
+footer {
+  flex: 1;
+  background-color: ivory;
+  height: 350px;
+}
+
+#test-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
+#test-paragraph {
+  display: none;
+  background-color: white;
+  padding: 10px;
+  margin-bottom: 5px;
+  border: 3px double black;
+  border-radius: 10px;
+  width: 300px;
+}
+
+#user-input {
+  padding: 10px;
+  width: 300px;
+  margin-bottom: 15px;
+}
+
+#game-controls {
+  margin-bottom: 10px;
+}
+
+#start-btn,
+#reset-btn {
+  padding: 10px;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-timer {
+  animation: pulsate 5s;
+}
+
+#timer {
+  color: white;
+  background-color: black;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 50%;
+  text-shadow: 0 0 0 gray;
+  border: 5px double white;
+}
+
+#user-input.correct-input {
+  color: green;
+}
+
+#user-input.error-input {
+  color: red;
+}
