@@ -1,13 +1,19 @@
 "use strict";
 
+// DOM Element References
 const startBtn = document.getElementById("start-btn");
 const resetBtn = document.getElementById("reset-btn");
 const timer = document.getElementById("timer");
 const testParagraph = document.getElementById("test-paragraph");
 const userInput = document.getElementById("user-input");
-let timerInterval;
-let time = 60;
-let gameActive = false;
+
+// Game State Variables
+let timerInterval; // Variable for the setInterval timer
+let time = 60; // Starting time for the timer
+let gameActive = false; // Boolean to track if the game is currently active
+let indexNextSentence = 0;
+
+// List of sentences for the typing test
 const testData = [
   "The early bird catches the worm.",
   "A journey of a thousand miles begins with a single step.",
@@ -57,8 +63,25 @@ const testData = [
   "Time flies over us, but leaves its shadow behind.",
   "To see a world in a grain of sand.",
 ];
-let mistake = 0;
-let correct = 0;
+const results = document.getElementById("results");
+const wordsPerMinute = document.querySelector(".words-per-minute");
+let highScores = [0, 0, 0];
+
+// Load high scores from localStorage (if available)
+const storedScores = JSON.parse(localStorage.getItem("highScores")); // Retrieve high scores from local storage
+if (storedScores) {
+  highScores = storedScores;
+}
+
+const updateHighScores = (score) => {
+  // Update and save high scores
+  highScores.push(score);
+  highScores.sort((a, b) => b - a); // Sort in descending order
+  highScores = highScores.slice(0, 3); // Keep only top 3 scores
+
+  // Save the updated scores to local storage
+  localStorage.setItem("highScores", JSON.stringify(highScores));
+};
 
 const shuffle = (array) => {
   // Iterate through the array backwards
@@ -74,9 +97,35 @@ const shuffle = (array) => {
   }
 };
 
-const showResults = () => {};
+// Counter for the total words typed correctly
+let totalWordsTyped = 0;
+
+// return total words typed correctly
+const getWordsPerMinute = () => {
+  return totalWordsTyped;
+};
+
+const countCorrectWords = () => {
+  // Count the words in the current test paragraph
+  const words = testParagraph.textContent.trim().split(" ");
+  totalWordsTyped += words.length;
+};
+
+const showResults = () => {
+  // Show typing results
+  countCorrectWords();
+  const wpm = getWordsPerMinute();
+  updateHighScores(wpm);
+  wordsPerMinute.textContent = `You typed ${wpm} words per minute!`;
+  const highScoreElements = document.querySelectorAll(".high-score");
+  for (let i = 0; i < highScores.length; i++) {
+    highScoreElements[i].textContent = `${highScores[i]} WPM`;
+  }
+  results.style.display = "flex";
+};
 
 const reset = () => {
+  // Reset the game to its initial state
   clearInterval(timerInterval);
   gameActive = false;
   startBtn.disabled = false;
@@ -85,30 +134,23 @@ const reset = () => {
   time = 60;
   timer.textContent = time;
   userInput.value = "";
-  mistake = 0;
-  correct = 0;
   userInput.classList.remove("correct-input", "error-input");
   indexNextSentence = 0;
-  console.clear();
 };
 
 const updateTimer = () => {
+  // Update the timer every second
   timer.classList.toggle("animate-timer");
   time--;
   timer.textContent = time;
-  if (time < 0) {
-    calculateAccuracy(testParagraph.textContent, userInput.value, true);
-    console.log(mistake, correct);
+  if (time <= 0) {
     showResults();
     reset();
   }
 };
 
 const checkInputMatch = () => {
-  // Get the current text in the input
   const currentInput = userInput.value;
-  console.log(currentInput);
-  // Get the respective part of the paragraph
   const paragraphSegment = testParagraph.textContent.substring(
     0,
     currentInput.length
@@ -121,69 +163,27 @@ const checkInputMatch = () => {
     userInput.classList.remove("correct-input");
     userInput.classList.add("error-input");
   }
-};
 
-const calculateAccuracy = (
-  testSentence,
-  userSentence,
-  isFinalCheck = false
-) => {
-  const testSentenceArray = testSentence.split(" ");
-  const userSentenceArray = userSentence.split(" ");
-
-  if (isFinalCheck) {
-    userSentenceArray.pop();
-  }
-
-  let length = Math.min(testSentenceArray.length, userSentenceArray.length);
-
-  for (let i = 0; i < length; i++) {
-    if (testSentenceArray[i] !== userSentenceArray[i]) {
-      mistake++;
-    } else {
-      correct++;
-    }
-  }
-
-  if (!isFinalCheck) {
-    mistake += Math.abs(testSentenceArray.length - userSentenceArray.length);
+  if (userInput.value === testParagraph.textContent) {
+    moveToNextSentence();
   }
 };
 
-let indexNextSentence = 0;
 const moveToNextSentence = () => {
+  countCorrectWords();
   if (indexNextSentence === testData.length) {
-    alert("All sentences completed!"); // This should never happen
+    alert("All sentences completed!");
   } else {
-    calculateAccuracy(testParagraph.textContent, userInput.value);
-    console.log(mistake, correct);
-    // Load the next sentence
-
     testParagraph.textContent = testData[indexNextSentence];
-    userInput.value = ""; // Clear the input for the next sentence
+    userInput.value = "";
     indexNextSentence++;
   }
 };
 
-let hasPressedEnterOnce = false;
-// Add an event listener to check every time the input changes
 userInput.addEventListener("input", () => {
   checkInputMatch();
-  if (userInput.value === testParagraph.textContent) {
-    moveToNextSentence();
-    hasPressedEnterOnce = false; // Reset the flag, as we're moving to the next sentence
-  }
-});
-
-userInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && gameActive) {
-    if (hasPressedEnterOnce) {
-      moveToNextSentence();
-      hasPressedEnterOnce = false; // Reset the flag after moving to the next sentence
-    } else {
-      hasPressedEnterOnce = true; // Set the flag indicating the user has pressed Enter once
-    }
-  }
+  userInput.rows = 1;
+  userInput.rows = Math.floor(userInput.scrollHeight / 32);
 });
 
 startBtn.addEventListener("click", () => {
@@ -198,6 +198,4 @@ startBtn.addEventListener("click", () => {
   userInput.focus();
 });
 
-resetBtn.addEventListener("click", () => {
-  reset();
-});
+resetBtn.addEventListener("click", reset);

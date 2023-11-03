@@ -34,15 +34,23 @@ footer {
   background-color: white;
   padding: 10px;
   margin-bottom: 5px;
-  border: 3px double black;
+  border: 4px double black;
   border-radius: 10px;
-  width: 300px;
+  width: 500px;
+  font-size: 22px;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  line-height: 1.5;
 }
 
 #user-input {
-  padding: 10px;
-  width: 300px;
+  padding: 14px;
+  width: 500px;
   margin-bottom: 15px;
+  font-size: 22px;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  line-height: 1.5;
 }
 
 #game-controls {
@@ -82,6 +90,7 @@ footer {
   border-radius: 50%;
   text-shadow: 0 0 0 gray;
   border: 5px double white;
+  margin-bottom: 10px;
 }
 
 #user-input.correct-input {
@@ -90,4 +99,47 @@ footer {
 
 #user-input.error-input {
   color: red;
+}
+
+#results {
+  width: 300px;
+  height: 200px;
+  display: none; /* Keeping the original display: none; */
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  gap: 2px;
+  border: 2px solid #333;
+  border-radius: 10px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.high-score,
+.words-per-minute {
+  width: 100%;
+  font-size: 1.2rem;
+  text-align: center;
+  border-radius: 5px;
+  height: 50px;
+  line-height: 50px;
+}
+
+.words-per-minute {
+  background-color: black;
+  color: white;
+  border: 5px inset red;
+}
+
+.first {
+  background-color: gold;
+}
+
+.second {
+  background-color: silver;
+}
+
+.third {
+  background-color: #cd7f32;
 }

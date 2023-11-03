@@ -13,18 +13,24 @@
     <main>
       <div id="test-container">
         <div id="test-paragraph"></div>
-        <input
-          type="text"
+        <textarea
           id="user-input"
           placeholder="Press Start to begin typing!"
           disabled
-        />
+          rows="1"
+          autocomplete="off"
+        ></textarea>
         <div id="game-controls">
           <button id="start-btn">Start</button>
           <button id="reset-btn">Reset</button>
         </div>
-        <div id="results"></div>
         <div id="timer">60</div>
+        <div id="results">
+          <div class="words-per-minute"></div>
+          <div class="high-score first"></div>
+          <div class="high-score second"></div>
+          <div class="high-score third"></div>
+        </div>
       </div>
     </main>
     <footer></footer>
