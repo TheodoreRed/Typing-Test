@@ -106,14 +106,22 @@ const getWordsPerMinute = () => {
 };
 
 const countCorrectWords = () => {
-  // Count the words in the current test paragraph
-  const words = testParagraph.textContent.trim().split(" ");
-  totalWordsTyped += words.length;
+  const testSentenceArray = testParagraph.textContent.split(" ");
+  const userSentenceArray = userInput.value.split(" ");
+  console.log(testSentenceArray, userSentenceArray);
+  if (time <= 0) {
+    for (let i = 0; i < userSentenceArray.length; i++) {
+      if (userSentenceArray[i] === testSentenceArray[i]) {
+        totalWordsTyped++;
+      }
+    }
+  } else {
+    totalWordsTyped += testSentenceArray.length;
+  }
 };
 
 const showResults = () => {
   // Show typing results
-  countCorrectWords();
   const wpm = getWordsPerMinute();
   updateHighScores(wpm);
   wordsPerMinute.textContent = `You typed ${wpm} words per minute!`;
@@ -127,6 +135,12 @@ const showResults = () => {
 const reset = () => {
   // Reset the game to its initial state
   clearInterval(timerInterval);
+  results.style.display = "none";
+  if (gameActive) {
+    time = 0;
+    countCorrectWords();
+    showResults();
+  }
   gameActive = false;
   startBtn.disabled = false;
   testParagraph.style.display = "none";
@@ -136,6 +150,7 @@ const reset = () => {
   userInput.value = "";
   userInput.classList.remove("correct-input", "error-input");
   indexNextSentence = 0;
+  totalWordsTyped = 0;
 };
 
 const updateTimer = () => {
@@ -144,7 +159,6 @@ const updateTimer = () => {
   time--;
   timer.textContent = time;
   if (time <= 0) {
-    showResults();
     reset();
   }
 };
@@ -187,6 +201,7 @@ userInput.addEventListener("input", () => {
 });
 
 startBtn.addEventListener("click", () => {
+  results.style.display = "none";
   shuffle(testData);
   testParagraph.textContent = testData[indexNextSentence];
   indexNextSentence++;
