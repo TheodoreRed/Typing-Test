@@ -1,6 +1,7 @@
 # Typing Test
 
 A fun and interactive way to test your typing skills! This application presents users with sentences to type and assesses the accuracy of their input in real time.
+- [Typing Test](https://type-test.surge.sh/ "Test your typing skills!")
 
 ## Code Overview
 
@@ -18,7 +19,6 @@ The Typing Test is a web-based application that provides users with random sente
 - **JavaScript**: Powers the game's logic. This includes:
   - Starting and resetting the game
   - Shuffling the sentences
-  - Checking the user's input for accuracy
   - Updating the timer and determining when the game ends
 
 ## Usage:
